@@ -1,0 +1,6 @@
+ribolla 2012 udine 21
+prosecco 2018 trieste 15
+barbera 2009 torino 20
+freisa 2010 torino 18
+barbera 2013 torino 14
+barolo 1984 alba 45
