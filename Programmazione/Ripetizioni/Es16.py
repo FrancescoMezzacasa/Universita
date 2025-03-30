@@ -27,4 +27,5 @@ def singole(text):
 
     return nuova
 
+
 dt.testmod(verbose=True)
