@@ -54,7 +54,7 @@ tabella #distribuzione di frequenza assoluta
 
 str(tabella) #table: di fatto un array con una dimensione
 
-tabella1<-table(AutoBi$MARITAL)
+tabella1<-table(AutoBi$MARITAL, useNA = "ifany")
 tabella1
 tabella1[1] #gestibile come un vettore
 tabella1["married"]
@@ -65,6 +65,11 @@ dim(tabella1)
 
 freqrel<-table(AutoBi$MARITAL)/length(AutoBi$MARITAL)
 freqrel
+sum(freqrel) #non fa 1!!
+
+totale <- length(AutoBi$MARITAL)- tabella1[4]
+freqrel2 <- table(AutoBi$MARITAL)/totale
+sum(freqrel2)
 
 # margin.table(): va applicata ad un array 
 # (restuisce le distribuzioni marginali) o il totale 
@@ -74,6 +79,7 @@ totale
 # usiamo questo come divisore 
 freqrel<-table(AutoBi$MARITAL)/totale
 freqrel
+sum(freqrel)
 
 
 # prop.table() consente di ottenere direttamente la versione
@@ -155,9 +161,9 @@ tabella1<-table(AutoBi$ATTORNEY, AutoBi$LOSSclass)
 tabella1                # tabella di frequenze congiunte
 
 mio<-prop.table(tabella1, 2)  # tabella di frequenze condizionate di colonna (|LOSS)
-
+mio
 cbind(mio, tot)        
-
+rbind(mio, margin.table(tabella1, 2))
 
 # se le due variabili non sono associate, sono indipendenti
 tabella2<-table(AutoBi$CLMSEX, CLMAGEclass)
@@ -182,13 +188,26 @@ str(tabella3) #array con. 3 dimensioni
 # Donne al volante pericolo costante?
 
 #1. Ottenere la distribuzione delle frequenze assolute e relative per sesso
+sex <- table(AutoBi$CLMSEX) #assolute
+prop.table(sex) #relative
 
 #2. Suddividere la variabile perdita utilizzando i quartili della distribuzione
 
+AutoBi$LOSSclass <- cut(AutoBi$LOSS, breaks = quantile(AutoBi$LOSS), include.lowest = T)
+#metto include lowest se no 0.005 non lo beccavo e perdevo 2 soggetti
+
 #3. Ottenere la distribuzione congiunta delle due variabili
+table(AutoBi$CLMSEX, AutoBi$LOSSclass)
+
 
 #4  Calcolare la distribuzione della variabile sesso condizionatamente alla perdita
 
+prop.table(table(AutoBi$CLMSEX, AutoBi$LOSSclass), 2)
+
 #5. Calcolare la distribuzione della variabile perdita condizionatamente al sesso
 
+prop.table(table(AutoBi$CLMSEX, AutoBi$LOSSclass), 1)
+
 #6. Confrontare le distribuzioni condizionate con le rispettive marginali
+
+rbind(prop.table(table(AutoBi$CLMSEX, AutoBi$LOSSclass), 1), prop.table(table(AutoBi$LOSSclass)))

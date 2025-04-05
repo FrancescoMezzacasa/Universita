@@ -60,7 +60,17 @@ prova
 # Extra: - dimostrare che una distribuzione Binomiale con $n$ grande e $p$ (o $1-p$) 
 # può essere ben approssimata da una Poisson con media $np$. 
 # Si utilizzi ad esempio  $n=100$ e $p=0.02$ e si confrontino i risultati graficamente.
+poiss <- function(x, n, q){
+  lambda <- n*q
+  ris <- ((lambda)^x)*(exp(-lambda))/factorial(x)
+  return(ris)
+}
 
+poiss(100, 2000, 0.0002)
+dpois(100, 2000*0.0002)
+
+plot(c(1:100), poiss(c(1:100), 2000, 0.0002), type = 'h')
+plot(c(1:100), dbinom(c(1:100), 2000, 0.0002), type = 'h')
 # Distribuzioni di probabilità continue ----
 
 xx <- seq(-5,5,.01)
@@ -77,12 +87,23 @@ curve(pnorm(x,-1,1.5), col=4, lwd=3, lty=4, xlim = c(-4,4))
 ### Esercizio ----
 # Calcolare le sequenti quantità per X ~ N(170,100):
 # - Pr(X <= 185)
+pnorm(185, 170, sqrt(100))
+curve(dnorm(x, 170, sqrt(100)), col=4, lwd=3, lty=4, xlim=c(140, 200))
+abline(v=185)
 
 # - Pr(165 <= X <= 190)
 
+pnorm(190, 170, sqrt(100)) - pnorm(165, 170, sqrt(100))
+curve(dnorm(x, 170, sqrt(100)), col=4, lwd=3, lty=4, xlim=c(140, 200))
+abline(v=190)
+abline(v=165)
 # - 99-esimo percentile di X
+qnorm(0.99, 170, sqrt(100))
+curve(dnorm(x, 170, sqrt(100)), col=4, lwd=3, lty=4, xlim=c(140, 200))
+abline(v = qnorm(0.99, 170, sqrt(100)))
 
 # - scarto interquartile di X
+# probabilita di cadere tra il primo e il terzo quartile
 
 ## Generazione di numeri (pseudo) casuali ----
 
@@ -122,3 +143,9 @@ points(punti+.1,dpois(punti,5),type="h",col=2, lwd=3)
 # Generiamo 800 valori casuali da una Gaussiana con media 10 e varianza 25
 # Confrontiamo l'istogramma dei valori ottenuti con la funzione di densità 
 # teorica della Normale.
+
+rnorm(800, 10, 5)
+hist(rnorm(800, 10, 5), freq = F)
+curve(dnorm(x, 10, 5), add=T)
+
+
