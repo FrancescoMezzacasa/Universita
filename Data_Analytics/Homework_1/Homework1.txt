@@ -1,0 +1,7 @@
+###Primo Homework###
+
+seq(20, 50)
+
+razionali <- seq(20, 50, 0.01)
+
+somma_media <- c(sum(razionali), mean(razionali))

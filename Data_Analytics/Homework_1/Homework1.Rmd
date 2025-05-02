@@ -1,0 +1,10 @@
+---
+title: "Homework1"
+author: "Francesco Mezzacasa"
+output: html_document
+---
+
+###Esercizi
+```{r}
+
+```

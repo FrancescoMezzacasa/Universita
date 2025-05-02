@@ -12,7 +12,7 @@ mean(x) > min(x) & mean(x) < max(x)
 #2.
 x-mean(x)
 sort(x-mean(x))
-sum(x-mean(x))
+sum(x-mean(x)) #ottengo uno praticamente 0
 
 #3.
 mean((x-mean(x))^2)
@@ -25,6 +25,7 @@ a[which.min(sapply(a, function(a) mean((x-a)^2)))]
 mean(x)*length(x); sum(x)     #media aritmetica
 exp(mean(log(x)))^n; prod(x)  #media geometrica
 1/mean(1/x)/n; 1/sum(1/x)     #media armonica
+
 
 library(DescTools)
 
@@ -79,7 +80,7 @@ sd(AutoBi$LOSS)
 
 # calcoliamo la varianza e la deviazione standard per la variabile LOSS # per i maschi e per le femmine
 #"Maschi"
-var(AutoBi$LOSS[AutoBi$CLMSEX=="M"], na.rm=TRUE)
+var(AutoBi$LOSS[AutoBi$CLMSEX=="M"], na.rm=T)
 sd(AutoBi$LOSS[AutoBi$CLMSEX=="M"], na.rm=TRUE)
 #"Femmine"
 var(AutoBi$LOSS[AutoBi$CLMSEX=="F"], na.rm=TRUE) 

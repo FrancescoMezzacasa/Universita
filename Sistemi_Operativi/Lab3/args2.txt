@@ -1,0 +1,4 @@
+echo "comando 1 eseguito"
+echo "comando 2 eseguito"
+echo "comando 3 eseguito"
+echo "comando 4 eseguito"
