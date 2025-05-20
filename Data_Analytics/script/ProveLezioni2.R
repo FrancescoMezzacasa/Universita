@@ -26,3 +26,41 @@ data("whiteside")
 #voglio scoprire se quanto gas consumo dipende dalla temperatura esterna
 plot(whiteside$Gas, whiteside$Temp)
 plot(whiteside$Temp, whiteside$Gas)
+
+plot(whiteside$Temp, whiteside$Gas)
+#vedo che ha covarianza negativa
+
+codevianza <- sum((whiteside$Temp-mean(whiteside$Temp))*(whiteside$Gas - mean(whiteside$Gas)))
+
+n <- length(whiteside$Temp)
+covarianzaN <- codevianza/n
+#uso la funzione di R
+cov(whiteside$Temp, whiteside$Gas)
+#vedo che è diversa perche divide per n-1
+covarianzaMenoUno <- codevianza/(n - 1)
+covarianzaMenoUno == cov(whiteside$Temp, whiteside$Gas)
+
+#calcolo il coeff. di correlazione lineare
+
+coeff <- covarianzaMenoUno/sqrt(var(whiteside$Temp)*var(whiteside$Gas))
+cor(whiteside$Gas, whiteside$Temp)
+
+
+#trovo i coeff della regressione
+beta1 <- covarianzaMenoUno/var(whiteside$Temp)
+beta0 <- mean(whiteside$Gas)-beta1*mean(whiteside$Temp)
+#ora traccio la retta con questi coeff
+abline(beta0, beta1, col=2)
+
+#voglio prevedere quanto sara il consumo di gas se ad esempio ci saranno 6 gradi
+beta0 + beta1*6
+
+
+#funzione lm
+regresslin <- lm(whiteside$Gas ~ whiteside$Temp)
+
+#qua dentro trovo sia i coefficienti che i residui (le distanze dalla retta)
+regresslin$coefficients
+regresslin$residuals
+
+summary(regresslin)
