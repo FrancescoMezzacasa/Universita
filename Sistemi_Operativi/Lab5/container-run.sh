@@ -14,12 +14,12 @@ else
         fuori=$(echo "$riga" | cut -d " " -f 1)
         dentro=$(echo "$riga" | cut -d " " -f 2)
 
-        if [ -d "$fuori" ] && [ -d "$dentro" ]
+        if [ -d "$fuori" ]
         #se sono cartelle 
         then
             mkdir -p $temporanea$dentro
             bindfs --no-allow-other $fuori $temporanea$dentro
-        elif [ -f "$fuori" ] && [ -f "$dentro" ]
+        elif [ -f "$fuori" ]
         then
             folder=$(dirname "$dentro")
             mkdir -p $temporanea$folder
