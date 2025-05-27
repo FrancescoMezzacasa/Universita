@@ -1,0 +1,169 @@
+---
+title: "Homework_2"
+author: "Francesco Mezzacasa"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Homework 2
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### 1)Si svolga l’analisi univariata di ciascuna variabile, proponendo visualizzazioni dei dati adeguate.
+
+```{r}
+df <- read.csv("fev.csv", stringsAsFactors = T)
+str(df)
+```
+
+
+Analisi della variabile AGE
+```{r}
+summary(df$AGE)
+```
+```{r}
+hist(df$AGE, probability = T)
+```
+
+Analisi della variabile FEV
+```{r}
+summary(df$FEV)
+```
+
+```{r}
+hist(df$FEV, probability = T)
+```
+
+Analisi della variabile HEIGHT
+```{r}
+summary(df$HEIGHT)
+```
+
+```{r}
+hist(df$HEIGHT)
+```
+
+
+Analisi della variabile SEX
+```{r}
+prop.table(table(df$SEX))
+```
+
+```{r}
+barplot(prop.table(table(df$SEX)))
+```
+
+
+Analisi della variabile SMOKE
+```{r}
+prop.table(table(df$SMOKE))
+```
+
+```{r}
+barplot(prop.table(table(df$SMOKE)))
+```
+
+
+### 2) Si usi uno strumento grafico per evidenziare le eventuali differenze nella capacità polmonare per i maschi e le femmine.
+
+```{r}
+boxplot(df$FEV ~ df$SEX)
+```
+
+
+### 3) Si conduca una analisi di regressione per prevedere la capacità polmonare utlizzando come predittore la statura e si fornisca la rappresentazione grafica e gli indici per valutare la qualità di tale rappresentazione. Cosa succede se la statura viene trasformata in centimetri?
+```{r}
+plot(df$HEIGHT, df$FEV)
+
+regresslin <- lm(df$FEV ~ df$HEIGHT)
+coeff <- regresslin$coefficients
+abline(coeff[1], coeff[2], col=2, lwd=3)
+```
+
+Uso il coefficiente R^2 per valutare la bontà
+```{r}
+n <- length(df$HEIGHT)
+res <- regresslin$residuals
+devtot <- var(df$FEV)*(n-1)
+devres <- var(res)*(n-1)
+R2 <- 1 - (devres/devtot)
+print(R2)
+```
+
+
+Vedo cosa succede se trasformo l'altezza in centimetri
+```{r}
+df$HEIGHTCM = df$HEIGHT * 2.54
+plot(df$HEIGHTCM, df$FEV)
+
+regresslinCM <- lm(df$FEV ~ df$HEIGHTCM)
+coeffCM <- regresslinCM$coefficients
+abline(coeffCM[1], coeffCM[2], col=2, lwd=3)
+
+```
+
+
+Valuto la bontà della regressione con l'altezza in centimetri
+```{r}
+R2CM <- summary(regresslinCM)$r.squared
+print(R2CM)
+```
+
+
+Viene identico.
+
+### 4) Si calcolino i residui della regressione di cui al punto 3 e si produca un grafico con sull’asse orizzontale il valore della variabile dipendente e su quello verticale i residui. Si aggiunga al grafico due linee orizzontali in corrispondenza di più o meno la radice quadrata della varianza dei residui.
+
+```{r}
+plot(df$FEV, res)
+abline(h = sqrt(var(res)), col = 2, lwd = 3)
+abline(h = -sqrt(var(res)), col = 2, lwd = 3)
+```
+
+
+### 5) Si ipotizzi che la relazione fra le due variabili non sia lineare, ma lineare a tratti. Cioè si immagini che vi sia una relazione lineare per le stature fino a 63 pollici e un’altra per le stature oltre 63. Si svolga l’analisi e si rappresenti questa su un grafico.
+```{r}
+bassi <- df[df$HEIGHT <= 63, ]
+alti <- df[df$HEIGHT >= 63, ]
+
+plot(df$HEIGHT, df$FEV)
+
+modelloalti <- lm(alti$FEV ~ alti$HEIGHT)
+modellobassi <- lm(bassi$FEV ~bassi$HEIGHT)
+coeffalti <- modelloalti$coefficients
+coeffbassi <- modellobassi$coefficients
+x_alti <- seq(min(alti$HEIGHT), max(alti$HEIGHT))
+lines(x_alti, (x_alti*coeffalti[2] + coeffalti[1]), col = 3, lwd = 3)
+x_bassi <- seq(min(bassi$HEIGHT), max(bassi$HEIGHT))
+lines(x_bassi, (x_bassi*coeffbassi[2] + coeffbassi[1]), col = 4, lwd = 3)
+```
+
+
+### 6) Si valuti la qualità della regressione a tratti con un opportuno misura in cui la qualità dipende dalla distanza del valore osservato da quello previsto al quadrato. Si confronti con quanto ottenuto al punto 3 e si commenti.
+
+Calcolo il coefficiente R^2 con i residui calcolati dalla retta appropriata
+```{r}
+resalti <- modelloalti$residuals
+devresalti <- var(resalti)*(length(alti$HEIGHT)-1)
+resbassi <- modellobassi$residuals
+devresbassi <- var(resbassi)*(length(bassi$HEIGHT)-1)
+
+R2tratti <- 1 - ((devresbassi + devresalti)/devtot)
+print(R2tratti)
+
+```
+
+Viene un po' meglio dell'altro
+
+
+### 7) Si svolga una analisi come al punto 5 ma imponendo che fra la seconda retta di regressione (quella per i soggetti più alti) e la prima (per i soggetti bassi) non vi sia discontinuità. Ovvero la retta di regressione fino a 63 ha in quel punto lo stesso valore della retta che parte da 63 in poi. Anche in questo caso si misuri la qualità della analisi e si confronti.
+
+```{r}
+altezza_extra <- ifelse(df$HEIGHT > 63, df$HEIGHT - 63, 0)
+modellocontinuo <- lm(df$FEV ~ df$HEIGHT + altezza_extra)
+coeffcontinuo <- modellocontinuo$coefficients
+
+plot(df$HEIGHT, df$FEV)
+lines(x_bassi, (x_bassi*coeffbassi[2] + coeffbassi[1]), col = 4, lwd = 3)
+lines(x_alti, (coeffcontinuo[1] + x_alti*coeffcontinuo[2] + (x_alti - 63)*coeffcontinuo[3]), col = 4, lwd = 3)
+```

@@ -61,6 +61,14 @@ regresslin <- lm(whiteside$Gas ~ whiteside$Temp)
 
 #qua dentro trovo sia i coefficienti che i residui (le distanze dalla retta)
 regresslin$coefficients
-regresslin$residuals
+res <- regresslin$residuals
 
 summary(regresslin)
+
+devtot <- var(whiteside$Gas) * (n-1)
+devres <- var(res) * (n-1)
+devres/devtot
+
+R2 <- 1-(devres/devtot)
+#voglio vedere se è uguale a r2
+r2 <- cor(whiteside$Temp, whiteside$Gas)^2
