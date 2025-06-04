@@ -2,15 +2,13 @@
 #include <unistd.h>    // read, write, lseek, close
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-    char * nome = "numeri.txt";
-    if (strstr(nome, ".gz") != NULL)
-    {
-        printf("Trovata\n");
-    }else{
-        printf("Non trovata\n");
-    }
-    
+    char comando[1024];
+    printf("Inserisci comando: ");
+    scanf("\"%s\"", comando);
+    int codice = system(comando);
+    printf("Codice = %d\n", codice);
     return 0;
 }
