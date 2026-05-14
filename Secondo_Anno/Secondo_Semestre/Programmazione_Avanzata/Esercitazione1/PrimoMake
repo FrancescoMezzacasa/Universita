@@ -1,0 +1,18 @@
+CC = gcc
+CFLAGS = -Wall -O3
+
+main: main.o tree.o nodes.o
+	${CC} ${CFLAGS} main.o tree.o nodes.o
+
+tree.o: tree.c tree.h nodes.h
+	${CC} ${CFLAGS} -c tree.c
+
+nodes.o: nodes.c nodes.h
+	${CC} ${CFLAGS} -c nodes.c
+
+main.o: main.c tree.h nodes.h
+	${CC} ${CFLAGS} -c main.c
+
+.PHONY: clean
+clean:
+	rm *.o
