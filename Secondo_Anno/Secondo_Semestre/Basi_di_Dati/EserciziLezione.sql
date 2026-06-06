@@ -598,3 +598,14 @@ BEGIN
         SIGNAL sqlstate '45001' SET message_text = 'Non puoi modificare il credito!';
     end if;
 end;
+
+SELECT sum(quantity)
+FROM orderdetails od
+JOIN orders o USING(orderNumber)
+GROUP BY o.customerNumber;
+
+SELECT max(quantita), min(quantita), floor(avg(quantita))
+FROM (SELECT sum(quantityOrdered) AS quantita
+FROM orderdetails od
+JOIN orders o USING(orderNumber)
+GROUP BY o.customerNumber) q;
