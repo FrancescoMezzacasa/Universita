@@ -6,7 +6,6 @@ import numpy as np
 #Esercizio 3
 '''
 5 variabili ognuna che dice quante di quelle attivita sono fatte in una settimana
-
 '''
 mod1 = gp.Model()
 
